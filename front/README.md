@@ -1,6 +1,6 @@
 # front
 
-> Simple media server
+> A media server-client pet app
 
 ## Build Setup
 
