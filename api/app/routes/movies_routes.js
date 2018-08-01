@@ -6,6 +6,7 @@ const apiKey     = 'ccce14a4';
 
 module.exports = function(app, db) {
     app.get('/movies' , (req, res) => {
+        res.set('Access-Control-Allow-Origin', 'http://localhost:8080')
         const reqArr = fs.readdirSync(testFolder).map((file) => {
             const fileArr          = file.split('');
             const movieName        = fileArr.slice(0, fileArr.indexOf('(')).join('');
