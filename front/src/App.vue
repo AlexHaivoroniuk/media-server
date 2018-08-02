@@ -27,7 +27,7 @@
       <!-- <v-btn round ripple color="primary" dark @click="getMovies">Refresh</v-btn> -->
       <v-spacer></v-spacer>
       <v-toolbar-title>
-        Media Server
+          Media Server  <v-icon>fa-film</v-icon>
       </v-toolbar-title>
     </v-toolbar>
     <v-container fluid grid-list-xl>

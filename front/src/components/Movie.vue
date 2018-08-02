@@ -1,6 +1,6 @@
 <template>
     <v-card
-        class="ma-5"
+        class="ma-2"
         >
         <v-card-media
             :src="this.movie.Poster"

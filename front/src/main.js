@@ -7,7 +7,9 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  iconfont: 'mdi' || 'fa'
+})
 
 Vue.config.productionTip = false
 
