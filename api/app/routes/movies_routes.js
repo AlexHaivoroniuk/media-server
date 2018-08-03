@@ -1,22 +1,15 @@
-const { URL }    = require('url');
-const testFolder = new URL('file:///home/ohaivoroniuk/Movies');
-const fs         = require('fs');
-const axios      = require('axios');
-const apiKey     = 'ccce14a4';
+const { URL }           = require('url');
+const testFolder        = new URL('file:///home/ohaivoroniuk/Movies');
+const fs                = require('fs');
+const axios             = require('axios');
+const api               = require('../../config/config');
+const apiKey            = api.apiKey;
+const MovieController   = require('../controllers/MoviesController');
+const movieCtrl = new MovieController();
 
 module.exports = function(app, db) {
-    app.get('/movies' , (req, res) => {
-        res.set('Access-Control-Allow-Origin', 'http://localhost:8080')
-        const reqArr = fs.readdirSync(testFolder).map((file) => {
-            const fileArr          = file.split('');
-            const movieName        = fileArr.slice(0, fileArr.indexOf('(')).join('');
-            const movieReleaseYear = fileArr.slice(fileArr.indexOf('(') + 1, fileArr.indexOf(')')).join('');
-            const movie            = {
-                name : movieName,
-                year : movieReleaseYear    
-            }
-            return axios.get(`http://www.omdbapi.com/?apikey=${apiKey}&t=${movie.name}&y=${movie.year}`).then(res => res.data);
-        });
-        Promise.all(reqArr).then(data => {res.json(data)});
-    });
+    app.get('/movies', movieCtrl.findAll);
+    app.get('/movies/:id', movieCtrl.findOne);
+    app.put('/movies/:id', movieCtrl.update);
+    app.delete('/movies/:id', movieCtrl.delete);
 };

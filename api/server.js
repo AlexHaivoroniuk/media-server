@@ -1,16 +1,22 @@
-const express     = require('express');
-const MongoClient = require('mongodb').MongoClient;
-const bodyParser  = require('body-parser');
-const db          = require('./config/db');
-const app         = express();
+const express       = require('express');
+const mongoose      = require('mongoose');
+const bodyParser    = require('body-parser');
+const PopulateDb    = require('./app/middleware/PopulateDbWithMovie');
+const {url, port}   = require('./config/config');
+const app           = express();
 
-const port = 4000;
+mongoose.Promise = Promise;
 app.use(bodyParser.urlencoded({ extended: true}));
-MongoClient.connect(db.url, { useNewUrlParser: true }, (err, database) => {
-    if (err) return console.log(err);
-    const db = database.db('test');
-    require('./app/routes')(app, db);
-    app.listen(port, () => {
-        console.log('Live on:' + port);
-    })
-});
+const db = mongoose.connect(url, { useNewUrlParser: true })
+                    .then( () => { 
+                        console.log('MongoDB Connected');
+                    })
+                    .catch((err) => {
+                        console.error('Failed to open Mongodb Connection: ', err.message);
+                        process.exit(1);
+                    })
+app.use('/movies', PopulateDb)
+require('./app/routes')(app);
+app.listen(port, () => {
+    console.log(`Server Live on: ${port}`);
+})
