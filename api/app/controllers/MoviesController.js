@@ -23,7 +23,7 @@ class MoviesController {
                         message: "Note not found with id " + req.params.id
                     })
                 }
-                res.send(note)
+                res.send(movie)
             })
             .catch(err => {
                 if (err.kind === 'ObjectId') {
@@ -37,16 +37,16 @@ class MoviesController {
             })
     }
     update(req, res) {
-        console.log(req.params)
+        // console.log(req.params)
+        // console.log(req)
         Movie.findByIdAndUpdate(req.params.id, {
-            Actors : req.body.cast,
+            Actors : req.body.actors,
             Country : req.body.country,
             Genre : req.body.genre,
-            Language : req.body.language,
             Plot : req.body.plot,
             Title: req.body.title,
             Year: req.body.year,
-            }, {new: true})
+            })
             .then(movie => {
                 if(!movie) {
                     return res.status(404).send({

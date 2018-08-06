@@ -1,5 +1,5 @@
 <template>
-            <v-flex xl11 lg11 md11 sm11 xs11 v-show="!!filtersTgl">
+            <v-flex xl11 lg11 md11 sm11 xs11 v-show="!!filtersToggle">
             <v-layout row wrap justify-center>
                 <v-flex xl12 lg12 md12 sm12 xs12>
                     <v-card>
@@ -11,9 +11,11 @@
                           <v-card-actions>
                             <v-select
                               :items="countryList"
-                              color="teal accent-2"
                               v-model="filters.country"
                               label="Chose country ..."
+                              multiple
+                              chips
+                              color="teal accent-2"
                             ></v-select>
                           </v-card-actions>
                         </v-flex>
@@ -111,27 +113,13 @@
 
 <script>
 export default {
-  props: ['filters', 'filtersTgl', 'clearFilters', 'filterMovies'],
-  data: () => ({
-    countryList: [
-      'US',
-      'UK',
-      'France',
-      'Canada',
-      'Australia'
-    ],
-    genreList: [
-      'Action',
-      'Adventure',
-      'Fantasy',
-      'Drama',
-      'Romance',
-      'Family',
-      'Crime',
-      'Sci-Fi',
-      'Horror',
-      'Thriller'
-    ]
-  })
+  props: [
+    'filters',
+    'filtersToggle',
+    'clearFilters',
+    'filterMovies',
+    'countryList',
+    'genreList'
+  ]
 }
 </script>

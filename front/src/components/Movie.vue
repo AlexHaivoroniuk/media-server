@@ -8,7 +8,8 @@
         >
         </v-card-media>
         <v-card-title class="title">
-        {{this.movie.Title}} ({{this.movie.Year}})
+            {{this.movie.Title}} ({{this.movie.Year}})
+            <EditDialog v-bind="{ countryList, genreList, movie, getMovies}"></EditDialog>
         </v-card-title>
         <v-card-text>
         <span class="font-weight-medium">Cast:</span> <span class="font-weight-light font-italic">{{this.movie.Actors}}</span>
@@ -44,7 +45,12 @@
 </template>
 
 <script>
+import EditDialog from './EditDialog'
+
 export default {
-  props: ['movie']
+  props: ['movie', 'countryList', 'genreList', 'getMovies'],
+  components: {
+    EditDialog
+  }
 }
 </script>

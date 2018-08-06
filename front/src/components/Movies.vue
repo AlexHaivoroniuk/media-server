@@ -4,16 +4,20 @@
         <Controls :fetchMovies="getMovies" ></Controls>
         <!-- Filter card -->
         <FilterCard
-          :filters="filters"
-          :filtersTgl="filtersToggle"
-          :filterMovies="filterMovies"
-          :clearFilters="clearFilters"
+          v-bind="{
+            filters,
+            filtersToggle,
+            filterMovies,
+            clearFilters,
+            countryList,
+            genreList
+            }"
           ></FilterCard>
         <v-flex xl4 lg4 md6 sm8 xs11
           v-for="(film, idx) in movies"
           v-if="movies.length > 0"
           :key="idx">
-          <Movie :movie="film"></Movie>
+          <Movie :movie="film" v-bind="{countryList, genreList, getMovies}"></Movie>
         </v-flex>
     </v-layout>
 </template>
@@ -28,11 +32,31 @@ export default {
     movies: [],
     moviesDefault: [],
     filters: {
-      country: '',
+      country: [],
       genre: [],
       year: [1900, 2018]
     },
-    filtersToggle: false
+    filtersToggle: false,
+    countryList: [
+      'USA',
+      'UK',
+      'France',
+      'Canada',
+      'Australia',
+      'New Zealand'
+    ],
+    genreList: [
+      'Action',
+      'Adventure',
+      'Fantasy',
+      'Drama',
+      'Romance',
+      'Family',
+      'Crime',
+      'Sci-Fi',
+      'Horror',
+      'Thriller'
+    ]
   }),
   components: {
     Movie,
@@ -57,10 +81,6 @@ export default {
             if (movie.Title !== undefined) return true
           })
           this.moviesDefault = this.movies.slice()
-          console.log(this)
-          console.log(data[0].Actors)
-          console.log(data[1].Title)
-          console.log(data[3].Poster)
         })
         .catch(err => console.error(err))
       console.log(this.filters)
@@ -78,31 +98,30 @@ export default {
       })
     },
     filterMovies: function () {
-      this.movies = this.filterByGenre(this.filterByCountry(this.filterByYear(this.moviesDefault.slice())))
+      this.movies = this.filterBy(
+        this.filterBy(this.filterBy(this.moviesDefault.slice(), 'year'), 'country'),
+        'genre'
+      )
     },
-    filterByYear: function (curMovies) {
+    /**
+     * curMovies - list of movies (Array of Obj)
+     * field     - string value to filter by (value from data > filters)
+     */
+    filterBy (curMovies, field) {
+      if (field === 'year') {
+        return curMovies.filter((elem) => {
+          if (elem.Year < this.filters.year[1] && elem.Year > this.filters.year[0]) return true
+          else return false
+        })
+      }
+
+      if (this.filters[field].length === 0) return curMovies
       return curMovies.filter((elem) => {
-        if (elem.Year < this.filters.year[1] && elem.Year > this.filters.year[0]) return true
-        else return false
-      })
-    },
-    filterByCountry: function (curMovies) {
-      if (this.filters.country === '') return curMovies
-      return curMovies.filter((elem) => {
-        if (elem.Country.toLowerCase().includes(this.filters.country.toLowerCase())) return true
-        else return false
-      })
-    },
-    filterByGenre: function (curMovies) {
-      if (this.filters.genre.length === 0) return curMovies
-      return curMovies.filter((elem) => {
-        let genresArr = elem.Genre.toLowerCase().split(',')
-        // console.log('genresArr', genresArr)
-        // console.log('filters.genre', this.filters.genre.join(',').toLowerCase())
-        let hasGenre = genresArr.map(el => {
-          return this.filters.genre.join(',').toLowerCase().includes(el.trim())
-        }).filter(el => el === true).length === this.filters.genre.length
-        if (hasGenre) return true
+        let fieldArr = elem[field[0].toUpperCase() + field.slice(1)].toLowerCase().split(',')
+        let hasField = fieldArr.map(el => {
+          return this.filters[field].join(',').toLowerCase().includes(el.trim())
+        }).filter(el => el === true).length === this.filters[field].length
+        if (hasField) return true
         else return false
       })
     },

@@ -8,14 +8,17 @@
       <v-list>
         <v-list-tile
             v-for="tile in drawerTiles"
-            :key="tile.text">
-          <v-list-tile-action>
-            <v-icon color="teal">{{tile.icon}}</v-icon>
-          </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{tile.text}}
-              </v-list-tile-title>
+            :key="tile.text"
+            :to="tile.path"
+            active-class="grey"
+            >
+            <v-list-tile-action>
+              <v-icon color="teal">{{tile.icon}}</v-icon>
+            </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  {{tile.text}}
+                </v-list-tile-title>
             </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -26,9 +29,11 @@
       </v-toolbar-side-icon>
       <!-- <v-btn round ripple color="primary" dark @click="getMovies">Refresh</v-btn> -->
       <v-spacer></v-spacer>
-      <v-toolbar-title>
+      <v-btn flat color="teal lighten-5" to="/">
+        <v-toolbar-title>
           Media Server  <v-icon>fa-film</v-icon>
-      </v-toolbar-title>
+        </v-toolbar-title>
+      </v-btn>
     </v-toolbar>
     <v-container fluid grid-list-xl>
       <router-view></router-view>
@@ -37,22 +42,22 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import Home from './components/Home'
 import Movies from './components/Movies'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    Home,
     Movies
   },
   data () {
     return {
       drawer: false,
       drawerTiles: [
-        { icon: 'home', text: 'Home' },
-        { icon: 'local_movies', text: 'Movies' },
-        { icon: 'library_music', text: 'Music' }
+        { icon: 'home', text: 'Home', path: '/' },
+        { icon: 'local_movies', text: 'Movies', path: '/movies' },
+        { icon: 'library_music', text: 'Music', path: '/music' }
       ]
     }
   }
@@ -60,5 +65,4 @@ export default {
 </script>
 
 <style>
-
 </style>
